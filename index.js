@@ -20,21 +20,33 @@ app.listen(8, () => {
 
 const mongoose = require("mongoose")
 
-const conexao = ()=>{
-    mongoose.connect('mongodb+srv://userRevisao:123user@fiap-tecnico.dsp0j.mongodb.net/?retryWrites=true&w=majority')
+const conexao = () => {
+  mongoose.connect('mongodb+srv://userRevisao:123user@fiap-tecnico.dsp0j.mongodb.net/revisao?retryWrites=true&w=majority')
 }
 
+//config o modelo alunos
+
+const modelo = new mongoose.Schema({
+  nome: String,
+  turma: String,
+  disciplina: String
+})
+
+//definir o modelo alunos
+
+const alunos = mongoose.model('alunos', modelo)
 
 //config banco de dados fim
 
 
 //rota para requisição /
 
-app.get("/", (req, res) => {
-    conexao()
+app.get("/", async(req, res) => {
+  conexao()
+  //presquisar documentos na collection alunos
+  const resultado = await alunos.find()
+  
   res.render("index.ejs", {
-    nome: "Alunos Feiosos",
-    turma: "2EMIA",
-    disciplina: "LP2",
+    resultado
   });
 });
